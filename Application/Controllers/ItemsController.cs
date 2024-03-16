@@ -23,19 +23,19 @@ namespace TmaWarehouse.Controllers
         // GET: Items
         public async Task<IActionResult> Index()
         {
-            var tmaWarehouseContext = _context.Item.Include(i => i.Group);
+            var tmaWarehouseContext = _context.Items.Include(i => i.Group);
             return View(await tmaWarehouseContext.ToListAsync());
         }
 
         // GET: Items/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Item == null)
+            if (id == null || _context.Items == null)
             {
                 return NotFound();
             }
 
-            var item = await _context.Item
+            var item = await _context.Items
                 .Include(i => i.Group)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (item == null)
@@ -100,12 +100,12 @@ namespace TmaWarehouse.Controllers
         // GET: Items/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Item == null)
+            if (id == null || _context.Items == null)
             {
                 return NotFound();
             }
 
-            var item = await _context.Item.FindAsync(id);
+            var item = await _context.Items.FindAsync(id);
             if (item == null)
             {
                 return NotFound();
@@ -151,12 +151,12 @@ namespace TmaWarehouse.Controllers
         // GET: Items/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Item == null)
+            if (id == null || _context.Items == null)
             {
                 return NotFound();
             }
 
-            var item = await _context.Item
+            var item = await _context.Items
                 .Include(i => i.Group)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (item == null)
@@ -172,14 +172,14 @@ namespace TmaWarehouse.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Item == null)
+            if (_context.Items == null)
             {
                 return Problem("Entity set 'TmaWarehouseContext.Item'  is null.");
             }
-            var item = await _context.Item.FindAsync(id);
+            var item = await _context.Items.FindAsync(id);
             if (item != null)
             {
-                _context.Item.Remove(item);
+                _context.Items.Remove(item);
             }
 
             await _context.SaveChangesAsync();
@@ -188,7 +188,7 @@ namespace TmaWarehouse.Controllers
 
         private bool ItemExists(int id)
         {
-            return (_context.Item?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Items?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

@@ -493,8 +493,6 @@ D:\MyRepo\TmaWarehouseApplication\Application\bin\Debug\net6.0\runtimes\win\lib\
 D:\MyRepo\TmaWarehouseApplication\Application\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 D:\MyRepo\TmaWarehouseApplication\Application\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
 D:\MyRepo\TmaWarehouseApplication\Application\obj\Debug\net6.0\TmaWarehouse.csproj.AssemblyReference.cache
-D:\MyRepo\TmaWarehouseApplication\Application\obj\Debug\net6.0\TmaWarehouse.Migrations.init.resources
-D:\MyRepo\TmaWarehouseApplication\Application\obj\Debug\net6.0\TmaWarehouse.csproj.GenerateResource.cache
 D:\MyRepo\TmaWarehouseApplication\Application\obj\Debug\net6.0\TmaWarehouse.GeneratedMSBuildEditorConfig.editorconfig
 D:\MyRepo\TmaWarehouseApplication\Application\obj\Debug\net6.0\TmaWarehouse.AssemblyInfoInputs.cache
 D:\MyRepo\TmaWarehouseApplication\Application\obj\Debug\net6.0\TmaWarehouse.AssemblyInfo.cs

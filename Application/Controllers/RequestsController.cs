@@ -22,19 +22,19 @@ namespace TmaWarehouse.Controllers
         // GET: Requests
         public async Task<IActionResult> Index()
         {
-            var tmaWarehouseDbContext = _context.Request.Include(r => r.Measurement);
+            var tmaWarehouseDbContext = _context.Requests.Include(r => r.Measurement);
             return View(await tmaWarehouseDbContext.ToListAsync());
         }
 
         // GET: Requests/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Request == null)
+            if (id == null || _context.Requests == null)
             {
                 return NotFound();
             }
 
-            var request = await _context.Request
+            var request = await _context.Requests
                 .Include(r => r.Measurement)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (request == null)
@@ -48,7 +48,7 @@ namespace TmaWarehouse.Controllers
         // GET: Requests/Create
         public IActionResult Create()
         {
-            ViewData["MeasurementId"] = new SelectList(_context.ItemMeasurement, "Id", "Id");
+            ViewData["MeasurementId"] = new SelectList(_context.ItemMeasurements, "Id", "Id");
             return View();
         }
 
@@ -65,30 +65,28 @@ namespace TmaWarehouse.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MeasurementId"] = new SelectList(_context.ItemMeasurement, "Id", "Id", request.MeasurementId);
+            ViewData["MeasurementId"] = new SelectList(_context.ItemMeasurements, "Id", "Id", request.MeasurementId);
             return View(request);
         }
 
         // GET: Requests/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Request == null)
+            if (id == null || _context.Requests == null)
             {
                 return NotFound();
             }
 
-            var request = await _context.Request.FindAsync(id);
+            var request = await _context.Requests.FindAsync(id);
             if (request == null)
             {
                 return NotFound();
             }
-            ViewData["MeasurementId"] = new SelectList(_context.ItemMeasurement, "Id", "Id", request.MeasurementId);
+            ViewData["MeasurementId"] = new SelectList(_context.ItemMeasurements, "Id", "Id", request.MeasurementId);
             return View(request);
         }
 
         // POST: Requests/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,EmployeeName,ItemId,MeasurementId,Quantity,Comment,Status")] Request request)
@@ -118,19 +116,19 @@ namespace TmaWarehouse.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MeasurementId"] = new SelectList(_context.ItemMeasurement, "Id", "Id", request.MeasurementId);
+            ViewData["MeasurementId"] = new SelectList(_context.ItemMeasurements, "Id", "Id", request.MeasurementId);
             return View(request);
         }
 
         // GET: Requests/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Request == null)
+            if (id == null || _context.Requests == null)
             {
                 return NotFound();
             }
 
-            var request = await _context.Request
+            var request = await _context.Requests
                 .Include(r => r.Measurement)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (request == null)
@@ -146,14 +144,14 @@ namespace TmaWarehouse.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Request == null)
+            if (_context.Requests == null)
             {
                 return Problem("Entity set 'TmaWarehouseDbContext.Request'  is null.");
             }
-            var request = await _context.Request.FindAsync(id);
+            var request = await _context.Requests.FindAsync(id);
             if (request != null)
             {
-                _context.Request.Remove(request);
+                _context.Requests.Remove(request);
             }
             
             await _context.SaveChangesAsync();
@@ -162,7 +160,7 @@ namespace TmaWarehouse.Controllers
 
         private bool RequestExists(int id)
         {
-          return (_context.Request?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Requests?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
