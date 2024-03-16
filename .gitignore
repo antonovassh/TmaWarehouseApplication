@@ -66,3 +66,28 @@ fastlane/test_output
 # https://github.com/johnno1962/injectionforxcode
 
 iOSInjectionProject/
+*.dll
+*.cache
+*.user
+*.json
+*.cshtml
+*.css
+*.txt
+*.config
+*.props
+*.resources
+*.cs
+*.map
+*.js
+*.json
+*.pdb
+*.csproj
+Application/wwwroot/lib/bootstrap/LICENSE
+*.exe
+*.editorconfig
+*.BuildWithSkipAnalyzers
+*.CopyComplete
+*.ico
+*.vsidx
+*.1
+*.resx
