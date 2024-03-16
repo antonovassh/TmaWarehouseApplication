@@ -21,10 +21,37 @@ namespace TmaWarehouse.Controllers
         }
 
         // GET: Items
-        public async Task<IActionResult> Index()
-        {
-            var tmaWarehouseContext = _context.Items.Include(i => i.Group);
-            return View(await tmaWarehouseContext.ToListAsync());
+        public async Task<IActionResult> Index(string sortOrder)
+        { 
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.PriceSortParm = sortOrder == "Price" ? "price_desc" : "Price";
+            ViewBag.GroupSortParm = sortOrder == "Group" ? "group_desc" : "Group";
+
+            var items = _context.Items.Include(i => i.Group).AsQueryable();
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    items = items.OrderByDescending(s => s.Name);
+                    break;
+                case "Price":
+                    items = items.OrderBy(s => s.Price);
+                    break;
+                case "price_desc":
+                    items = items.OrderByDescending(s => s.Price);
+                    break;
+                case "Group":
+                    items = items.OrderBy(s => s.Group.Name);
+                    break;
+                case "group_desc":
+                    items = items.OrderByDescending(s => s.Group.Name);
+                    break;
+                default:
+                    items = items.OrderBy(s => s.Name);
+                    break;
+            }
+
+            return View(await items.ToListAsync());
         }
 
         // GET: Items/Details/5

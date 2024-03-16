@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<Application.Models.Item>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Trade and Material Assets (TMA) Warehouse";
 }
 
-<h1>Index</h1>
+<h1>Items</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -13,71 +13,72 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.NameSortParm })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Group)
+                @Html.ActionLink("Group", "Index", new { sortOrder = ViewBag.GroupSortParm })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MeasurementId)
+                @Html.DisplayName("Mesurment")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Quantity)
+                @Html.DisplayName("Quantity")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Price)
+                @Html.ActionLink("Price", "Index", new { sortOrder = ViewBag.PriceSortParm })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Status)
+                @Html.DisplayName("Status")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StorageLocation)
+                @Html.DisplayName("Storage Location")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ContactPerson)
+                @Html.DisplayName("Contact person")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Photo)
+                @Html.DisplayName("Photo")
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Group.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MeasurementId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Quantity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StorageLocation)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ContactPerson)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Photo)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Group.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Measurement.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StorageLocation)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ContactPerson)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Photo)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
