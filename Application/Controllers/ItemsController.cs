@@ -21,14 +21,17 @@ namespace TmaWarehouse.Controllers
         }
 
         // GET: Items
-        public async Task<IActionResult> Index(string sortOrder)
+        public async Task<IActionResult> Index(string sortOrder, string searchString)
         { 
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewBag.PriceSortParm = sortOrder == "Price" ? "price_desc" : "Price";
             ViewBag.GroupSortParm = sortOrder == "Group" ? "group_desc" : "Group";
 
             var items = _context.Items.Include(i => i.Group).AsQueryable();
-
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                items = items.Where(s => s.Name.Contains(searchString));
+            }
             switch (sortOrder)
             {
                 case "name_desc":
