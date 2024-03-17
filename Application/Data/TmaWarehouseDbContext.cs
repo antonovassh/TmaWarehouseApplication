@@ -2,10 +2,12 @@
 using Application.Models.ItemModel;
 using Application.Models.Request;
 using Application.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using TmaWarehouse.Areas.Identity.Data;
 
 namespace TmaWarehouse.Data
 {
-    public class TmaWarehouseDbContext : DbContext
+    public class TmaWarehouseDbContext : IdentityDbContext<TmaWarehouseUser>
     {
         public TmaWarehouseDbContext(DbContextOptions<TmaWarehouseDbContext> options)
             : base(options)

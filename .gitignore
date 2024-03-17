@@ -50,3 +50,6 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+/Application/obj/Debug
+/Application/obj
+/Application/obj/Debug
