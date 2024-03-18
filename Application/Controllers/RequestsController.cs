@@ -30,8 +30,10 @@ namespace TmaWarehouse.Controllers
             var requests = _context.Requests.AsQueryable();
             if (!String.IsNullOrEmpty(searchString))
             {
-                requests = requests.Where(s => s.EmployeeName.Contains(searchString));
-            }
+
+				requests = requests.Where(s => s.Id.ToString().Contains(searchString));
+			}
+
             switch (sortOrder)
             {
                 case "name_desc":

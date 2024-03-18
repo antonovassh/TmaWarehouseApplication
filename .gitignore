@@ -54,3 +54,6 @@ dkms.conf
 /Application/obj
 /Application/obj/Debug
 /Application/obj
+.vs/TmaWarehouse/FileContentIndex/626a7211-8e90-4320-901d-63904040a45c.vsidx
+.vs/TmaWarehouse/FileContentIndex/118d366e-c258-49f8-b0a1-0646ce221a47.vsidx
+*.cache

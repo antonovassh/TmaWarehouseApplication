@@ -1,73 +1,80 @@
 ﻿@model IEnumerable<Application.Models.Request.Request>
 
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
 }
 
 <h1>Requests</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+	<a asp-action="Create">Create New</a>
 </p>
 
 @using (Html.BeginForm())
 {
-    <p>
-        Find by name: @Html.TextBox("SearchString")
-        <input type="submit" value="Search" />
-    </p>
+	<p>
+		Find by Request Number: @Html.TextBox("SearchString")
+		<input type="submit" value="Search" />
+	</p>
 }
 <table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.ActionLink("Employee Name", "Index", new { sortOrder = ViewBag.EmployeeNameSortParm })
+	<thead>
+		<tr>
+			<th>
+                @Html.DisplayName("Request Number")
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ItemId)
+			<th>
+				@Html.ActionLink("Employee Name", "Index", new { sortOrder = ViewBag.EmployeeNameSortParm })
+			</th>
+			<th>
+                @Html.DisplayName("Item Id")
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Measurement)
-            </th>
-            <th>
-                @Html.ActionLink("Quantity", "Index", new { sortOrder = ViewBag.QuantitySortParm })
-            </th>
-            <th>
-                @Html.ActionLink("Comment", "Index", new { sortOrder = ViewBag.CommentSortParm })
-            </th>
-            <th>
-                @Html.ActionLink("Status", "Index", new { sortOrder = ViewBag.StatusSortParm })
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.EmployeeName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ItemId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Measurement.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Quantity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Comment)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
+			<th>
+				@Html.DisplayName("Mesurement")
+			</th>
+			<th>
+				@Html.ActionLink("Quantity", "Index", new { sortOrder = ViewBag.QuantitySortParm })
+			</th>
+			<th>
+				@Html.ActionLink("Comment", "Index", new { sortOrder = ViewBag.CommentSortParm })
+			</th>
+			<th>
+				@Html.ActionLink("Status", "Index", new { sortOrder = ViewBag.StatusSortParm })
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.Id)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.EmployeeName)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.ItemId)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.MeasurementId)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Quantity)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Comment)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Status)
+				</td>
+				<td>
+					<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+					<a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+					<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+				</td>
+			</tr>
+		}
+	</tbody>
 </table>
