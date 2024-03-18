@@ -18,6 +18,7 @@ using TmaWarehouse.Areas.Identity.Data;
 
 namespace TmaWarehouse.Areas.Identity.Pages.Account
 {
+    [AllowAnonymous]
     public class LoginModel : PageModel
     {
         private readonly SignInManager<TmaWarehouseUser> _signInManager;
@@ -94,13 +95,13 @@ namespace TmaWarehouse.Areas.Identity.Pages.Account
 
             returnUrl ??= Url.Content("~/");
 
-            // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             ReturnUrl = returnUrl;
         }
+
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {

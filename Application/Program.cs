@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using TmaWarehouse.Areas.Identity.Data;
 using TmaWarehouse.Data;
 
@@ -8,7 +9,11 @@ builder.Services.AddDbContext<TmaWarehouseDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("TmaWarehouseContext") ?? throw new InvalidOperationException("Connection string 'TmaWarehouseContext' not found.")));
 
 builder.Services.AddDefaultIdentity<TmaWarehouseUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<TmaWarehouseDbContext>();
+
+
+
 builder.Services.AddRazorPages();
 
 builder.Services.Configure<IdentityOptions>(options =>
@@ -68,5 +73,20 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapRazorPages();
+
+using(var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+    var roles = new[] { "Coordinator", "Employee", "Administrator" };
+
+    foreach(var role in roles)
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+            await roleManager.CreateAsync(new IdentityRole(role));
+    }
+}
 
 app.Run();
