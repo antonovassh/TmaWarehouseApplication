@@ -20,10 +20,47 @@ namespace TmaWarehouse.Controllers
         }
 
         // GET: Requests
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
-            var tmaWarehouseDbContext = _context.Requests.Include(r => r.Measurement);
-            return View(await tmaWarehouseDbContext.ToListAsync());
+            ViewBag.EmployeeNameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.QuantitySortParm = sortOrder == "Quantity" ? "quant_desc" : "Quantity";
+            ViewBag.CommentSortParm = sortOrder == "Comment" ? "comment_desc" : "Comment";
+            ViewBag.StatusSortParm = sortOrder == "Status" ? "status_desc" : "Status";
+
+            var requests = _context.Requests.AsQueryable();
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                requests = requests.Where(s => s.EmployeeName.Contains(searchString));
+            }
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    requests = requests.OrderByDescending(s => s.EmployeeName);
+                    break;
+                case "Quantity":
+                    requests = requests.OrderBy(s => s.Quantity);
+                    break;
+                case "quant_desc":
+                    requests = requests.OrderByDescending(s => s.Quantity);
+                    break;
+                case "Comment":
+                    requests = requests.OrderBy(s => s.Comment);
+                    break;
+                case "comment_desc":
+                    requests = requests.OrderByDescending(s => s.Comment);
+                    break;
+                case "Status":
+                    requests = requests.OrderBy(s => s.Status);
+                    break;
+                case "status_desc":
+                    requests = requests.OrderByDescending(s => s.Status);
+                    break;
+                default:
+                    requests = requests.OrderBy(s => s.EmployeeName);
+                    break;
+            }
+
+            return View(await requests.ToListAsync());
         }
 
         // GET: Requests/Details/5

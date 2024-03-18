@@ -18,7 +18,7 @@ using TmaWarehouse.Areas.Identity.Data;
 
 namespace TmaWarehouse.Areas.Identity.Pages.Account
 {
-    [AllowAnonymous]
+
     public class LoginModel : PageModel
     {
         private readonly SignInManager<TmaWarehouseUser> _signInManager;
