@@ -8,10 +8,13 @@ using Microsoft.EntityFrameworkCore;
 using Application.Models;
 using TmaWarehouse.Data;
 using Application.Models.ItemModel;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace TmaWarehouse.Controllers
 {
-    public class ItemsController : Controller
+	[Authorize(Roles = "Coordinator")]
+	public class ItemsController : Controller
     {
         private readonly TmaWarehouseDbContext _context;
 

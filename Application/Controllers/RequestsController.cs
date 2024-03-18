@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Application.Models.Request;
 using TmaWarehouse.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TmaWarehouse.Controllers
 {
+    [Authorize(Roles = "Coordinator")]
     public class RequestsController : Controller
     {
         private readonly TmaWarehouseDbContext _context;
@@ -84,16 +86,39 @@ namespace TmaWarehouse.Controllers
             return View(request);
         }
 
-        // GET: Requests/Create
-        public IActionResult Create()
+
+		// POST: Requests/Confirm/5
+		[Route("Requests/Confirm/{requestId}")]
+		[HttpPost]
+		public IActionResult Confirm(int requestId)
+		{
+			var request = _context.Requests.FirstOrDefault(r => r.Id == requestId);
+
+			if (request == null)
+			{
+				return NotFound(); 
+			}
+
+			var item = request.Item;
+
+			if (item.Quantity > 1)
+			{
+				item.Quantity = 1;
+			}
+
+			_context.SaveChanges();
+
+			return View(request); 
+		}
+
+		// GET: Requests/Create
+		public IActionResult Create()
         {
             ViewData["MeasurementId"] = new SelectList(_context.ItemMeasurements, "Id", "Id");
             return View();
         }
 
         // POST: Requests/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,EmployeeName,ItemId,MeasurementId,Quantity,Comment,Status")] Request request)

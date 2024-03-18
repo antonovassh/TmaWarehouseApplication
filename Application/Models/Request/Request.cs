@@ -10,6 +10,8 @@ namespace Application.Models.Request
 
         public string EmployeeName { get; set; }
 
+        public Item Item { get; set; }
+
         public int ItemId { get; set; }
 
         public ItemMeasurement Measurement { get; set; }
@@ -18,7 +20,7 @@ namespace Application.Models.Request
 
         public int Quantity { get; set; }
 
-        //public int Price { get; set; } пускай общий считается прайс
+        //public int Price { get; set; } 
 
         public string? Comment { get; set; }
 

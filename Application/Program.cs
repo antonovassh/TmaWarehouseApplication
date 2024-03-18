@@ -5,14 +5,13 @@ using TmaWarehouse.Areas.Identity.Data;
 using TmaWarehouse.Data;
 
 var builder = WebApplication.CreateBuilder(args);
+
 builder.Services.AddDbContext<TmaWarehouseDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("TmaWarehouseContext") ?? throw new InvalidOperationException("Connection string 'TmaWarehouseContext' not found.")));
+	options.UseSqlServer(builder.Configuration.GetConnectionString("TmaWarehouseContext") ?? throw new InvalidOperationException("Connection string 'TmaWarehouseContext' not found.")));
 
-builder.Services.AddDefaultIdentity<TmaWarehouseUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<TmaWarehouseDbContext>();
-
-
+builder.Services.AddDefaultIdentity<TmaWarehouseUser>(options => options.SignIn.RequireConfirmedAccount = false)
+	.AddRoles<IdentityRole>()
+	.AddEntityFrameworkStores<TmaWarehouseDbContext>();
 
 builder.Services.AddRazorPages();
 
@@ -76,17 +75,36 @@ app.MapControllerRoute(
 
 app.MapRazorPages();
 
-using(var scope = app.Services.CreateScope())
+using (var scope = app.Services.CreateScope())
 {
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+	var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-    var roles = new[] { "Coordinator", "Employee", "Administrator" };
+	var roles = new[] { "Coordinator", "Employee", "Administrator" };
 
-    foreach(var role in roles)
-    {
-        if (!await roleManager.RoleExistsAsync(role))
-            await roleManager.CreateAsync(new IdentityRole(role));
-    }
+	foreach (var role in roles)
+	{
+		if (!await roleManager.RoleExistsAsync(role))
+			await roleManager.CreateAsync(new IdentityRole(role));
+	}
+}
+
+using (var scope = app.Services.CreateScope())
+{
+	var userManager = scope.ServiceProvider.GetRequiredService<UserManager<TmaWarehouseUser>>();
+
+	string email = "coordinator@coordinator.com";
+	string password = "_8780;iqY97(";
+
+	if (await userManager.FindByEmailAsync(email) == null)
+	{
+		var user = new TmaWarehouseUser(); 
+		user.UserName = email;
+		user.Email = email;
+
+		await userManager.CreateAsync(user, password);
+
+		await userManager.AddToRoleAsync(user, "Coordinator");
+	}
 }
 
 app.Run();

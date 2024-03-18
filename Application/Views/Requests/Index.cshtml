@@ -1,7 +1,18 @@
-﻿@model IEnumerable<Application.Models.Request.Request>
+﻿@using Microsoft.AspNetCore.Identity;
+@using TmaWarehouse.Areas.Identity.Data;
+
+@model IEnumerable<Application.Models.Request.Request>
+
+@inject SignInManager<TmaWarehouseUser> UserManager
+@inject UserManager<TmaWarehouseUser> UserManager
 
 @{
 	ViewData["Title"] = "Index";
+}
+
+@if (User.IsInRole("Coordinator"))
+{
+	<h2>Hello, Coordinator!</h2>
 }
 
 <h1>Requests</h1>
@@ -70,6 +81,7 @@
 					@Html.DisplayFor(modelItem => item.Status)
 				</td>
 				<td>
+					<a asp-action="Confirm" asp-route-id="@item.Id">Confirm</a> |
 					<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
 					<a asp-action="Details" asp-route-id="@item.Id">Details</a> |
 					<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
