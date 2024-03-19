@@ -11,17 +11,21 @@ using Application.Models.ItemModel;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
 using TmaWarehouse.Models.ViewModel;
+using Microsoft.AspNetCore.Hosting;
 
 namespace TmaWarehouse.Controllers
+
 {
     [Authorize(Roles = "Employee, Coordinator")]
     public class ItemsController : Controller
     {
         private readonly TmaWarehouseDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ItemsController(TmaWarehouseDbContext context)
+        public ItemsController(TmaWarehouseDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: Items
@@ -237,6 +241,11 @@ namespace TmaWarehouse.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+        public ActionResult DisplayImage(string imageName)
+        {
+            string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "Images", imageName);
+            return PhysicalFile(imagePath, "image/jpeg"); 
         }
 
         private bool ItemExists(int id)
