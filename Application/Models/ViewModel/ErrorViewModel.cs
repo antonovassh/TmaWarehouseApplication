@@ -1,9 +1,8 @@
-namespace TmaWarehouse.Models.ViewModel
-{
-    public class ErrorViewModel
-    {
-        public string? RequestId { get; set; }
+namespace TmaWarehouse.Models.ViewModel;
 
-        public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
-    }
+public class ErrorViewModel
+{
+    public string? RequestId { get; set; }
+
+    public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 }

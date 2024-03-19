@@ -1,256 +1,129 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Application.Models;
-using TmaWarehouse.Data;
-using Application.Models.ItemModel;
+﻿using Application.Models;
 using Microsoft.AspNetCore.Authorization;
-using System.Data;
+using Microsoft.AspNetCore.Mvc;
 using TmaWarehouse.Models.ViewModel;
-using Microsoft.AspNetCore.Hosting;
+using TmaWarehouse.Services.Items;
 
-namespace TmaWarehouse.Controllers
+namespace TmaWarehouse.Controllers;
 
+[Authorize(Roles = "Employee, Coordinator")]
+public class ItemsController : Controller
 {
-    [Authorize(Roles = "Employee, Coordinator")]
-    public class ItemsController : Controller
+    private readonly IItemsService _itemsService;
+
+    public ItemsController(IItemsService itemsService)
     {
-        private readonly TmaWarehouseDbContext _context;
-        private readonly IWebHostEnvironment _webHostEnvironment;
+        _itemsService = itemsService;
+    }
 
-        public ItemsController(TmaWarehouseDbContext context, IWebHostEnvironment webHostEnvironment)
+    // GET: Items
+    public async Task<IActionResult> Index(string sortOrder, string searchString)
+    {
+        ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+        ViewBag.PriceSortParm = sortOrder == "Price" ? "price_desc" : "Price";
+        ViewBag.GroupSortParm = sortOrder == "Group" ? "group_desc" : "Group";
+
+        var result = _itemsService.GetAllAsync(sortOrder, searchString);
+
+        return View(result);
+    }
+
+    // GET: Items/Details/5
+    public async Task<IActionResult> Order(int id)
+    {
+        var item = await _itemsService.GetByIdAsync(id);
+
+        if (item == null)
         {
-            _context = context;
-            _webHostEnvironment = webHostEnvironment;
+            return NotFound();
         }
 
-        // GET: Items
-        public async Task<IActionResult> Index(string sortOrder, string searchString)
-        { 
-            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            ViewBag.PriceSortParm = sortOrder == "Price" ? "price_desc" : "Price";
-            ViewBag.GroupSortParm = sortOrder == "Group" ? "group_desc" : "Group";
-
-            var items = _context.Items.Include(i => i.Group).AsQueryable();
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                items = items.Where(s => s.Name.Contains(searchString));
-            }
-            switch (sortOrder)
-            {
-                case "name_desc":
-                    items = items.OrderByDescending(s => s.Name);
-                    break;
-                case "Price":
-                    items = items.OrderBy(s => s.Price);
-                    break;
-                case "price_desc":
-                    items = items.OrderByDescending(s => s.Price);
-                    break;
-                case "Group":
-                    items = items.OrderBy(s => s.Group.Name);
-                    break;
-                case "group_desc":
-                    items = items.OrderByDescending(s => s.Group.Name);
-                    break;
-                default:
-                    items = items.OrderBy(s => s.Name);
-                    break;
-            }
-
-
-            return View(await items.ToListAsync());
-        }
-
-        // GET: Items/Details/5
-        public async Task<IActionResult> Order(int? id)
+        var viewModel = new OrderViewModel
         {
-            if (id == null || _context.Items == null)
-            {
-                return NotFound();
-            }
+            ItemId = item.Id,
+            ItemName = item.Name,
+            Measurement = item.Measurement,
+            Quantity = item.Quantity,
+            Price = item.Price
+        };
 
-            var item = await _context.Items
-                .Include(i => i.Group)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (item == null)
-            {
-                return NotFound();
-            }
+        return View(viewModel);
+    }
 
-            var viewModel = new OrderViewModel
-            {
-                ItemId = item.Id,
-                ItemName = item.Name,
-                Measurement = item.Measurement,
-                Quantity = item.Quantity,
-                Price = item.Price
-            };
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult SubmitOrder()
+    {
 
-            return View(viewModel);
-        }
+        TempData["Message"] = "Request created";
+        return RedirectToAction("Index");
+    }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult SubmitOrder()
+    // GET: Items/Create
+    public IActionResult Create()
+    {
+        return View();
+    }
+
+    // POST: Items/Create
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(
+        [Bind("Id,Name,GroupId,MeasurementId,Quantity,Price,Status,StorageLocation,ContactPerson,Photo")]
+        Item item)
+    {
+        if (ModelState.IsValid)
         {
+            await _itemsService.CreateAsync(item);
 
-            TempData["Message"] = "Request created";
-            return RedirectToAction("Index"); 
-        }
-
-        // GET: Items/Create
-        public IActionResult Create()
-        {
-            ViewBag.Groups = new List<ItemGroup>
-     {
-         new ItemGroup
-         {
-             Id = 1, Name = "Electronics"
-         },
-         new ItemGroup
-         {
-             Id = 2, Name = "Apparel"
-         },
-         new ItemGroup
-         {
-             Id = 3, Name = "Home goods"
-         }
-     };
-            ViewBag.Measurements = new List<ItemMeasurement>
-     {
-         new ItemMeasurement
-         {
-             Id = 1, Name = "pcs"
-         },
-         new ItemMeasurement
-         {
-             Id = 2, Name = "kg"
-         },
-         new ItemMeasurement
-         {
-             Id = 2, Name = "litres"
-         }
-
-     };
-            return View();
-        }
-        // POST: Items/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,GroupId,MeasurementId,Quantity,Price,Status,StorageLocation,ContactPerson,Photo")] Item item)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(item);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["GroupId"] = new SelectList(_context.Set<ItemGroup>(), "Id", "Id", item.GroupId);
-            return View(item);
-        }
-
-        // GET: Items/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.Items == null)
-            {
-                return NotFound();
-            }
-
-            var item = await _context.Items.FindAsync(id);
-            if (item == null)
-            {
-                return NotFound();
-            }
-            ViewData["GroupId"] = new SelectList(_context.Set<ItemGroup>(), "Id", "Id", item.GroupId);
-            return View(item);
-        }
-
-        // POST: Items/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,GroupId,MeasurementId,Quantity,Price,Status,StorageLocation,ContactPerson,Photo")] Item item)
-        {
-            if (id != item.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(item);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ItemExists(item.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["GroupId"] = new SelectList(_context.Set<ItemGroup>(), "Id", "Id", item.GroupId);
-            return View(item);
-        }
-
-        // GET: Items/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.Items == null)
-            {
-                return NotFound();
-            }
-
-            var item = await _context.Items
-                .Include(i => i.Group)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (item == null)
-            {
-                return NotFound();
-            }
-
-            return View(item);
-        }
-
-        // POST: Items/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.Items == null)
-            {
-                return Problem("Entity set 'TmaWarehouseContext.Item'  is null.");
-            }
-            var item = await _context.Items.FindAsync(id);
-            if (item != null)
-            {
-                _context.Items.Remove(item);
-            }
-
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-        public ActionResult DisplayImage(string imageName)
+
+        return View(item);
+    }
+
+    // GET: Items/Edit/5
+    public async Task<IActionResult> Edit(int id)
+    {
+        var item = await _itemsService.GetByIdAsync(id);
+
+        if (item == null)
         {
-            string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "Images", imageName);
-            return PhysicalFile(imagePath, "image/jpeg"); 
+            return NotFound();
         }
 
-        private bool ItemExists(int id)
+        return View(item);
+    }
+
+    // POST: Items/Edit/5
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(
+        int id,
+        [Bind("Id,Name,GroupId,MeasurementId,Quantity,Price,Status,StorageLocation,ContactPerson,Photo")] Item item)
+    {
+        if (id != item.Id)
         {
-            return (_context.Items?.Any(e => e.Id == id)).GetValueOrDefault();
+            return NotFound();
         }
+
+        if (ModelState.IsValid)
+        {
+            await _itemsService.UpdateAsync(item);
+        
+            return RedirectToAction(nameof(Index));
+        }
+
+        return View(item);
+    }
+
+    // POST: Items/Delete/5
+    [HttpPost, ActionName("Delete")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        await _itemsService.DeleteByIdAsync(id);
+
+        return RedirectToAction(nameof(Index));
     }
 }

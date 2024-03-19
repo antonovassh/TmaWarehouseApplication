@@ -22,9 +22,9 @@
                 <select asp-for="GroupId" class="form-control">
                     <option value="">Select Group</option>
                     @foreach (var group in ViewBag.Groups)
-                    {
-                        <option value="@group.Id">@group.Name</option>
-                    }
+                {
+                    <option value="@group.Id">@group.Name</option>
+                }
                 </select>
             </div>
             <div class="form-group">
@@ -32,9 +32,9 @@
                 <select asp-for="MeasurementId" class="form-control">
                     <option value="">Select Measurement</option>
                     @foreach (var measurement in ViewBag.Measurements)
-                    {
-                        <option value="@measurement.Id">@measurement.Name</option>
-                    }
+                {
+                    <option value="@measurement.Id">@measurement.Name</option>
+                }
                 </select>
                 <span asp-validation-for="MeasurementId" class="text-danger"></span>
             </div>
