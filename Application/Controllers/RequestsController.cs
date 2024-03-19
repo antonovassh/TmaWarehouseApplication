@@ -87,12 +87,11 @@ namespace TmaWarehouse.Controllers
         }
 
 
-		// POST: Requests/Confirm/5
-		[Route("Requests/Confirm/{requestId}")]
-		[HttpPost]
-		public IActionResult Confirm(int requestId)
+		// POST
+        [HttpPost]
+        public IActionResult Confirm(int Id)
 		{
-			var request = _context.Requests.FirstOrDefault(r => r.Id == requestId);
+			var request = _context.Requests.FirstOrDefault(r => r.Id == Id);
 
 			if (request == null)
 			{

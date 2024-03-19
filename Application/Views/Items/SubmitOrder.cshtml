@@ -1,0 +1,13 @@
+﻿@{
+    ViewData["Title"] = "SubmitOrder";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Submit Order</h1>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["Message"]
+    </div>
+}

@@ -19,6 +19,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="Views\Requests\Confirm.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Update="Views\Shared\Order.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -36,7 +36,9 @@
         <input asp-for="Comment" class="form-control" />
     </div>
 
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <form asp-controller="Items" asp-action="SubmitOrder" method="post">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
     <button type="button" class="btn btn-secondary" onclick="window.history.back();">Cancel</button>
     <button type="button" class="btn btn-success" onclick="addToRequest()">Add to Request</button>
 }

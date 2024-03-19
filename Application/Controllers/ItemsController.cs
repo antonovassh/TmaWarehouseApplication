@@ -92,7 +92,7 @@ namespace TmaWarehouse.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SubmitOrder(OrderViewModel model)
+        public IActionResult SubmitOrder()
         {
 
             TempData["Message"] = "Request created";
