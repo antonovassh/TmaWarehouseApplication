@@ -524,3 +524,4 @@ D:\MyRepo\TmaWarehouseApplication\Application\bin\Debug\net6.0\Microsoft.Extensi
 D:\MyRepo\TmaWarehouseApplication\Application\bin\Debug\net6.0\Microsoft.Extensions.Identity.Core.dll
 D:\MyRepo\TmaWarehouseApplication\Application\bin\Debug\net6.0\Microsoft.Extensions.Identity.Stores.dll
 D:\MyRepo\TmaWarehouseApplication\Application\obj\Debug\net6.0\TmaWarehouse.MvcApplicationPartsAssemblyInfo.cs
+D:\MyRepo\TmaWarehouseApplication\Application\bin\Debug\net6.0\Views\Shared\Order.cshtml

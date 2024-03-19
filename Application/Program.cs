@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TmaWarehouse.Areas.Identity.Data;
@@ -104,6 +104,25 @@ using (var scope = app.Services.CreateScope())
 		await userManager.CreateAsync(user, password);
 
 		await userManager.AddToRoleAsync(user, "Coordinator");
+	}
+}
+
+using (var scope = app.Services.CreateScope())
+{
+	var userManager = scope.ServiceProvider.GetRequiredService<UserManager<TmaWarehouseUser>>();
+
+	string email = "employee@employee.com";
+	string password = "5{]`7£T$nT3U";
+
+	if (await userManager.FindByEmailAsync(email) == null)
+	{
+		var user = new TmaWarehouseUser();
+		user.UserName = email;
+		user.Email = email;
+
+		await userManager.CreateAsync(user, password);
+
+		await userManager.AddToRoleAsync(user, "Employee");
 	}
 }
 

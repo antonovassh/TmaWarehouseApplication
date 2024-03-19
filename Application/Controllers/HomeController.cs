@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using TmaWarehouse.Models.ViewModel;
 
 namespace Application.Controllers
 {

@@ -1,0 +1,50 @@
+﻿@using TmaWarehouse.Models.ViewModel;
+@model OrderViewModel
+
+@{
+    ViewData["Title"] = "Order";
+}
+
+<h1>Order</h1>
+
+@using (Html.BeginForm("SubmitOrder", "Items", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        <label asp-for="ItemName"></label>
+        <input asp-for="ItemName" class="form-control" readonly />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Measurement"></label>
+        <input asp-for="Measurement" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Quantity"></label>
+        <input asp-for="Quantity" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Price"></label>
+        <input asp-for="Price" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Comment"></label>
+        <input asp-for="Comment" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="button" class="btn btn-secondary" onclick="window.history.back();">Cancel</button>
+    <button type="button" class="btn btn-success" onclick="addToRequest()">Add to Request</button>
+}
+
+@section Scripts {
+    <script>
+        function addToRequest() {
+            // Your JavaScript code to add to request goes here
+        }
+    </script>
+}

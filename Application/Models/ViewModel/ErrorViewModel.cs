@@ -1,4 +1,4 @@
-namespace Application.Models
+namespace TmaWarehouse.Models.ViewModel
 {
     public class ErrorViewModel
     {

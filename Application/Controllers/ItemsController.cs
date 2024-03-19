@@ -10,11 +10,12 @@ using TmaWarehouse.Data;
 using Application.Models.ItemModel;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
+using TmaWarehouse.Models.ViewModel;
 
 namespace TmaWarehouse.Controllers
 {
-	[Authorize(Roles = "Coordinator")]
-	public class ItemsController : Controller
+    [Authorize(Roles = "Employee, Coordinator")]
+    public class ItemsController : Controller
     {
         private readonly TmaWarehouseDbContext _context;
 
@@ -57,11 +58,12 @@ namespace TmaWarehouse.Controllers
                     break;
             }
 
+
             return View(await items.ToListAsync());
         }
 
         // GET: Items/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Order(int? id)
         {
             if (id == null || _context.Items == null)
             {
@@ -76,7 +78,25 @@ namespace TmaWarehouse.Controllers
                 return NotFound();
             }
 
-            return View(item);
+            var viewModel = new OrderViewModel
+            {
+                ItemId = item.Id,
+                ItemName = item.Name,
+                Measurement = item.Measurement,
+                Quantity = item.Quantity,
+                Price = item.Price
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult SubmitOrder(OrderViewModel model)
+        {
+
+            TempData["Message"] = "Request created";
+            return RedirectToAction("Index"); 
         }
 
         // GET: Items/Create
